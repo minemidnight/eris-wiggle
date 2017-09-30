@@ -4,7 +4,7 @@ const commandParser = async (message, next, wiggle) => {
 	else prefixes = wiggle._options.prefixes || ["mention"];
 
 	prefixes = prefixes.filter((ele, i, arr) => arr.indexOf(ele) === i);
-	if(~prefixes.indexOf("mention")) prefixes[prefixes.indexOf("mention")] = `<@!?${wiggle._client.user.id}>`;
+	if(~prefixes.indexOf("mention")) prefixes[prefixes.indexOf("mention")] = `<@!?${wiggle.erisClient.user.id}>`;
 	const prefixRegex = new RegExp(`^(?:${prefixes.join("|")}),?(?:\\s+)?([\\s\\S]+)`, "i");
 
 	message.originalContent = message.content;
@@ -18,7 +18,7 @@ const commandParser = async (message, next, wiggle) => {
 		message.content = "";
 	} else {
 		command = message.content.substring(0, message.content.indexOf(" "));
-		message.content = message.content.substring(message.content.indexOf(" "));
+		message.content = message.content.substring(message.content.indexOf(" ")).trim();
 	}
 	command = command.toLowerCase().trim();
 

@@ -2,14 +2,19 @@ const wiggle = require("../index");
 const client = wiggle();
 client.set("owner", "155112606661607425");
 client.set("prefixes", ["mention", "!"]);
-client.set("token", "bot token");
+client.set("token", "token");
 client.use("message", wiggle.middleware.commandParser());
+
+client.use("ready", next => {
+	client.erisClient.editStatus("online", { name: "Hello!" });
+});
 
 client.use("ping", (message, next) => {
 	console.log("Ping middleware");
 
 	next();
 });
+
 client.command("ping", { sendTyping: true, replyResult: true }, context => {
 	console.log("Ping handler");
 	return "Pong!";
@@ -23,8 +28,7 @@ creator.use((message, next) => {
 });
 
 const util = require("util");
-creator.command("eval", { replyResult: true, caseSensitive: true }, async context => {
-	const { message } = context;
+creator.command("eval", { replyResult: true, caseSensitive: true }, async ({ message }) => {
 	let guild = message.channel.guild, channel = message.channel, author = message.author, member = message.member; // eslint-disable-line
 
 	try {

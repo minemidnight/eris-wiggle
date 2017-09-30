@@ -24,5 +24,8 @@
   "homepage": "https://github.com/minemidnight/eris-wiggle#readme",
   "dependencies": {
     "eris": "^0.7.2"
+  },
+  "optionalDependencies": {
+    "superagent": "^3.6.1"
   }
 }
