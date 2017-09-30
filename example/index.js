@@ -39,5 +39,4 @@ creator.command("eval", { replyResult: true, caseSensitive: true }, async contex
 client.use(creator);
 
 client.connect();
-
 process.on("unhandledRejection", err => console.error(err.stack));
