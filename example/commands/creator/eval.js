@@ -1,6 +1,7 @@
 const util = require("util");
 module.exports = {
-	run: async ({ message }) => {
+	run: async ctx => {
+		const { message } = ctx;
 		let guild = message.channel.guild, channel = message.channel, author = message.author, member = message.member; // eslint-disable-line
 
 		try {
@@ -11,5 +12,6 @@ module.exports = {
 			return `:x: **Error:** \`\`\`\n${error}\n\`\`\``;
 		}
 	},
-	options: { caseSensitive: true }
+	args: [{ type: "text", label: "input" }],
+	caseSensitive: true
 };

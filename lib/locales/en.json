@@ -1,0 +1,20 @@
+{
+	"wiggle.commands.error.guildOnly": "This command can only be used in guilds",
+	"wiggle.locale.invalidPlaceholder": "Invalid placeholder (`{{placeholder}}` is not defined). Please report this to a developer",
+	"wiggle.locale.invalidContext": "Invalid context (`{{context}}` does not exist). Please report this to a developer",
+	"wiggle.missingArgs": "You are missing some arguments! Correct usage: `{{command}} {{usage}}`",
+	"wiggle.resolver.error.booleanError": "Invalid input, please only use `enable, yes, true, 1` or `disable, no, false, 0`",
+	"wiggle.resolver.error.channelNotFound": "No channel found",
+	"wiggle.resolver.error.emojiNotFound": "No emoji found",
+	"wiggle.resolver.error.NaN": "Please only enter numbers",
+	"wiggle.resolver.error.belowMin": "Please only enter numbers above `{{min}}`",
+	"wiggle.resolver.error.aboveMax": "Please only enter numbers below `{{max}}`",
+	"wiggle.resolver.error.invalidLink": "Invalid link",
+	"wiggle.resolver.error.roleNotFound": "No role found",
+	"wiggle.resolver.error.invalidInvite": "Invalid invite given",
+	"wiggle.resolver.error.userNotCached": "That user is not cached",
+	"wiggle.resolver.error.noUserFound": "No user was found",
+	"wiggle.resolver.error.cantResolveMember": "The member argument can only be used when commands are executed in guilds",
+	"wiggle.resolver.error.noMemberFound": "A user was found, but they are not in the server",
+	"wiggle.resolver.error.noImage": "No image could be resolved. Please give an attachment, link, emoji, or user"
+}
