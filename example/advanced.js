@@ -2,7 +2,7 @@ const wiggle = require("../index");
 const client = wiggle();
 client.set("owner", "155112606661607425");
 client.set("prefixes", ["mention", "!"]);
-client.set("token", "MzU0MDQ2MTc0MzU0OTk3MjUx.DLRH3w.sZrpWD3Ly5d1DijYc0FxJebVu6w");
+client.set("token", "token here");
 client.set("commandOptions", { sendTyping: true, replyResult: true });
 
 client.use("message", wiggle.middleware.commandParser());
