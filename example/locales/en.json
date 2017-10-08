@@ -1,3 +1,5 @@
 {
-	"ping.success": "Pong! {{ms}}ms"
+	"ping.success": "Pong! {{ms}}ms",
+	"say.success": "You said: {{word}}",
+	"words.nothing": "Nothing"
 }

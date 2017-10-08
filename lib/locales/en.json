@@ -1,6 +1,6 @@
 {
 	"wiggle.commands.error.guildOnly": "This command can only be used in guilds",
-	"wiggle.locale.invalidPlaceholder": "Invalid placeholder (`{{placeholder}}` is not defined). Please report this to a developer",
+	"wiggle.locale.invalidPlaceholder": "< **Invalid placeholder (`{{placeholder}}` is not defined). Please report this to a developer** >",
 	"wiggle.locale.invalidContext": "Invalid context (`{{context}}` does not exist). Please report this to a developer",
 	"wiggle.missingArgs": "You are missing some arguments! Correct usage: `{{command}} {{usage}}`",
 	"wiggle.resolver.error.booleanError": "Invalid input, please only use `enable, yes, true, 1` or `disable, no, false, 0`",
