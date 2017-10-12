@@ -9,7 +9,7 @@ const commandParser = async (message, next, wiggle) => {
 
 	message.originalContent = message.content;
 	let match = message.content.match(prefixRegex);
-	if(!match && message.channel.guild) return;
+	if(!match && message.channel.guild) return next();
 	else if(match) [, message.content] = match;
 
 	let command;
