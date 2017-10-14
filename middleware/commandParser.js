@@ -35,11 +35,10 @@ const commandParser = async (message, next, wiggle) => {
 
 	command = middlewares.find(middleware => middleware.name === command || ~middleware.command.aliases.indexOf(command));
 	if(!command) {
-		return;
-	} else if(command.command.guildOnly) {
-		message.channel.message.createMessage(message.t("wiggle.commands.error.guildOnly"));
-		return;
-	}
+        	return next();
+    	} else if(command.command.guildOnly === true && !message.channel.guild) {
+        	return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));
+    	}
 
 	if(!command.command.caseSensitive) message.content = message.content.toLowerCase();
 	message.command = command.command;
