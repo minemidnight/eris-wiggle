@@ -1,4 +1,5 @@
 const resolver = require("../lib/resolver.js");
+const Eris = require("eris");
 
 const argHandler = async (message, next, wiggle) => {
 	let command = message.command;
@@ -56,8 +57,16 @@ const argHandler = async (message, next, wiggle) => {
 	}
 
 	if(args.length < command.args.filter(arg => !arg.optional).length) {
-		message.channel.createMessage(message.t("wiggle.missingArgs", { command: command.name, usage: command.usage }));
-		return false;
+		if(command.embedError === true) {
+			// contains the commandOptions
+			const embed = new Eris.Embed;
+			embed.addField("Input:", message.originalContent)
+				.addField("Error:", message.t("wiggle.missingArgs", { command: command.name, usage: command.usage }))
+				.setFooter(message.t("wiggle.embed.footer", { tag: message.author.tag }))
+				.setTimestamp()
+				.setColor(0xE74C3C);
+			return message.channel.createEmbed(embed);
+		} else return message.channel.createMessage(message.t("wiggle.missingArgs", { command: command.name, usage: command.usage })); // eslint-disable-line
 	}
 
 	message.args = [];

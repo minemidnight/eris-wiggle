@@ -1,3 +1,4 @@
+const Eris = require("eris");
 const commandParser = async (message, next, wiggle) => {
 	let prefixes;
 	if(wiggle._options.getPrefixes) prefixes = await wiggle._options.getPrefixes(message);
@@ -33,17 +34,26 @@ const commandParser = async (message, next, wiggle) => {
 		return total;
 	}, []);
 
-	command = middlewares.find(middleware => middleware.name === command || ~middleware.command.aliases.indexOf(command));
+	command = middlewares.find(middleware => middleware.name === command || ~middleware.command.aliases.indexOf(command)); // eslint-disable-line max-len
 	if(!command) {
 		return next();
-    	} else if(command.command.guildOnly === true && !message.channel.guild) {
-         	return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));
-     	}
+	} else if(command.command.guildOnly === true && !message.guild) {
+		if(command.command.embedError === true) {
+			// contains the commandOptions
+			const embed = new Eris.Embed;
+			embed.addField("Input:", message.originalContent)
+				.addField("Error:", message.t("wiggle.commands.error.guildOnly"))
+				.setFooter(message.t("wiggle.embed.footer", { tag: message.author.tag }))
+				.setTimestamp()
+				.setColor(0xE74C3C);
+			return message.channel.createEmbed(embed);
+        } else return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly")); // eslint-disable-line
+	}
 
 	if(!command.command.caseSensitive) message.content = message.content.toLowerCase();
 	message.command = command.command;
 
-	next();
+	return next();
 };
 
 module.exports = () => commandParser;
