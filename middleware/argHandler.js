@@ -1,7 +1,7 @@
 const resolver = require("../lib/resolver.js");
 
 const argHandler = async (message, next, wiggle) => {
-	let command = message.command;
+	let { command } = message;
 	if(!command) return next();
 
 	message.content = message.content.trim();
