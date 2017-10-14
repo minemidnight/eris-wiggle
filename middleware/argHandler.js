@@ -77,8 +77,14 @@ const argHandler = async (message, next, wiggle) => {
 		try {
 			message.args[i] = await resolver[argOptions.type](arg, message, argOptions);
 		} catch(err) {
-			message.channel.createMessage(message.t(err.message, err.data));
-			return false;
+			if(command.embedError === true) {
+				const embed = new Eris.Embed;
+				embed.addField("Error:", message.t(err.message, err.data))
+					.setFooter(message.t("wiggle.embed.footer", { tag: message.author.tag }))
+					.setTimestamp()
+					.setColor(0xE74C3C);
+				return message.channel.createEmbed(embed);
+			} else return message.channel.createMessage(message.t(err.message, err.data)); // eslint-disable-line
 		}
 	}
 
