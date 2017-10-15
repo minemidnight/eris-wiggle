@@ -8,8 +8,6 @@
 	"wiggle.resolver.error.channelNotFound": "No channel found",
 	"wiggle.resolver.error.emojiNotFound": "No emoji found",
 	"wiggle.resolver.error.NaN": "Please only enter numbers",
-	"wiggle.resolver.error.belowMinWord": "Please enter at least `{{min}}` words",
-	"wiggle.resolver.error.aboveMaxWord": "Please enter a maximum of `{{min}}` words",
 	"wiggle.resolver.error.belowMin": "Please only enter numbers above `{{min}}`",
 	"wiggle.resolver.error.aboveMax": "Please only enter numbers below `{{max}}`",
 	"wiggle.resolver.error.invalidLink": "Invalid link",
