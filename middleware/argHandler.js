@@ -95,7 +95,9 @@ const argHandler = async (message, next, wiggle) => {
 					timestamp: new Date(),
 					footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
 				});
-			} else return message.channel.createMessage(message.t(err.message, err.data)); // eslint-disable-line
+			} else {
+				return message.channel.createMessage(message.t(err.message, err.data));
+			}
 		}
 	}
 

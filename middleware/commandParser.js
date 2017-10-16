@@ -53,7 +53,9 @@ const commandParser = async (message, next, wiggle) => {
 				timestamp: new Date(),
 				footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
 			});
-        } else return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly")); // eslint-disable-line
+		} else {
+			return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));
+		}
 	}
 
 	if(!command.command.caseSensitive) message.content = message.content.toLowerCase();
