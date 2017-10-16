@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/minemidnight/eris-wiggle#readme",
   "dependencies": {
-    "eris": "^0.7.2",
-    "eris-additions": "git+https://git@github.com/torsina/eris-additions.git"
+    "eris": "^0.7.2"
   },
   "optionalDependencies": {
     "superagent": "^3.6.1"

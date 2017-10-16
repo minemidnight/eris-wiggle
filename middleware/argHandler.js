@@ -1,5 +1,4 @@
 const resolver = require("../lib/resolver.js");
-const Eris = require("eris");
 
 const argHandler = async (message, next, wiggle) => {
 	let command = message.command;
@@ -58,14 +57,21 @@ const argHandler = async (message, next, wiggle) => {
 
 	if(args.length < command.args.filter(arg => !arg.optional).length) {
 		if(command.embedError === true) {
-			// contains the commandOptions
-			const embed = new Eris.Embed;
-			embed.addField("Input:", message.originalContent)
-				.addField("Error:", message.t("wiggle.missingArgs", { command: command.name, usage: command.usage }))
-				.setFooter(message.t("wiggle.embed.footer", { tag: message.author.tag }))
-				.setTimestamp()
-				.setColor(0xE74C3C);
-			return message.channel.createEmbed(embed);
+			return message.channel.createEmbed({
+				fields: [
+					{
+						name: "Input:",
+						value: message.originalContent
+					},
+					{
+						name: "Error:",
+						value: message.t("wiggle.missingArgs", { command: command.name, usage: command.usage })
+					}
+				],
+				color: 0xE74C3C,
+				timestamp: new Date(),
+				footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
+			});
 		} else return message.channel.createMessage(message.t("wiggle.missingArgs", { command: command.name, usage: command.usage })); // eslint-disable-line
 	}
 
@@ -78,12 +84,17 @@ const argHandler = async (message, next, wiggle) => {
 			message.args[i] = await resolver[argOptions.type](arg, message, argOptions);
 		} catch(err) {
 			if(command.embedError === true) {
-				const embed = new Eris.Embed;
-				embed.addField("Error:", message.t(err.message, err.data))
-					.setFooter(message.t("wiggle.embed.footer", { tag: message.author.tag }))
-					.setTimestamp()
-					.setColor(0xE74C3C);
-				return message.channel.createEmbed(embed);
+				return message.channel.createEmbed({
+					fields: [
+						{
+							name: "Error:",
+							value: message.t(err.message, err.data)
+						}
+					],
+					color: 0xE74C3C,
+					timestamp: new Date(),
+					footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
+				});
 			} else return message.channel.createMessage(message.t(err.message, err.data)); // eslint-disable-line
 		}
 	}
