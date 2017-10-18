@@ -160,6 +160,16 @@ Constructor options (all optional):
 	* Whether or not the command input is case sensitive
 	* If false, `<Message>.content` is converted to lower case
 	* Default value: `false`
+* flags\<Array\<Object>>
+	* Array of flags to use
+	* Required fields:
+		* name\<String> - name of flag (must be unique amongst other flags. can use `-`)
+		* type\<String> - same as argument type
+	* Optional fields:
+		* short\<String> - shortname option for the flag (can be used as an alias instead)
+		* aliases\<Array\<String>> - array of aliases to also use
+		* default\<*> - the default value to be passed to the resolver if no value is given
+	* Default value: `[]`
 * guildOnly\<Boolean>
 	* Whether or not this command may only be executed in guilds
 	* Default value: `false`
@@ -177,8 +187,9 @@ Properties:
 	* Category that the command belongs to
 	* If registered using `<Wiggle>.command`, it is `default`
 * usage\<String>
-	* String constructed based off command arguments
+	* String constructed based off command arguments and flags
 	* Contains usage of command, eg `[]`, `<text>`, `[text]`, `<user> [text]`, etc
+	* Example with flags: `<text> ...--time|-t [int=5]`
 
 The command run function is called with a parameter: 
 * Context\<Object>
@@ -195,6 +206,9 @@ The command run function is called with a parameter:
 	* channel\<Object>
 		* Channel the messsage was sent in
 		* Reference to message.channel
+	* flags\<Object>
+		* Flags used in the message (keys are flag names, values are flag values)
+		* Reference to message.flags
 	* guild\<Object>
 		* Guild the message was sent in
 		* Reference to message.channel.guild
@@ -204,7 +218,7 @@ The command run function is called with a parameter:
 		* Function that does the same as message.channel.createMessage with few differences
 		* Accepts a file as the first parameter if there is no content
 		* Accepts an array as the first argument, which will then make the first argument the first element, and the second the second element (useful when using replyResult option)
-	* Resolver\<Object>
+	* resolver\<Object>
 		* Object filled with functions
 		* Resolves input to certain types
 	* t\<Function(...)>

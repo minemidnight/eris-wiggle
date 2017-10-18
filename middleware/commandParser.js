@@ -1,7 +1,7 @@
 const commandParser = async (message, next, wiggle) => {
 	let prefixes;
-	if(wiggle._options.getPrefixes) prefixes = await wiggle._options.getPrefixes(message);
-	else prefixes = wiggle._options.prefixes || ["mention"];
+	if(wiggle.get("getPrefixes")) prefixes = await wiggle.get("getPrefixes")(message);
+	else prefixes = wiggle.get("prefixes") || ["mention"];
 
 	prefixes = prefixes.filter((ele, i, arr) => arr.indexOf(ele) === i);
 	if(~prefixes.indexOf("mention")) prefixes[prefixes.indexOf("mention")] = `<@!?${wiggle.erisClient.user.id}>`;
@@ -35,15 +35,15 @@ const commandParser = async (message, next, wiggle) => {
 
 	command = middlewares.find(middleware => middleware.name === command || ~middleware.command.aliases.indexOf(command));
 	if(!command) {
-        	return next();
-    	} else if(command.command.guildOnly === true && !message.channel.guild) {
-        	return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));
-    	}
+		return next();
+	} else if(command.command.guildOnly && !message.channel.guild) {
+		return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));
+	}
 
 	if(!command.command.caseSensitive) message.content = message.content.toLowerCase();
 	message.command = command.command;
 
-	next();
+	return next();
 };
 
 module.exports = () => commandParser;

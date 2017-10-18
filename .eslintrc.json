@@ -89,7 +89,7 @@
 			"allowArrowFunctions": true
 		}],
 		"id-length": ["error", {
-			"exceptions": ["i", "j", "a", "b"]
+			"exceptions": ["i", "j", "a", "b", "t"]
 		}],
 		"indent": ["error", "tab", {
 			"SwitchCase": 1

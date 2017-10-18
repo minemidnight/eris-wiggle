@@ -1,68 +1,71 @@
+const parseArgs = require("minimist");
 const resolver = require("../lib/resolver.js");
 
 const argHandler = async (message, next, wiggle) => {
-	let { command } = message;
+	const { command } = message;
 	if(!command) return next();
 
-	message.content = message.content.trim();
-	if(command.args.length === 0) {
-		message.args = [message.content.trim()];
-		return next();
-	}
+	const parsed = parseArgs(message.content.split(" "), {
+		string: command.flags.filter(flag => flag.type !== "boolean").map(({ name }) => name),
+		boolean: command.flags.filter(flag => flag.type === "boolean").map(({ name }) => name),
+		alias: command.flags.reduce((a, b) => {
+			if(b.aliases || b.short) a[b.name] = (b.aliases || []).concat(b.short || []);
+			return a;
+		}, {}),
+		default: command.flags.reduce((a, b) => {
+			if(b.default) a[b.name] = b.default;
+			return a;
+		}, {})
+	});
 
-	let args = [], currentQuoted = false, startIndex = 0;
-	for(let i = 0; i < message.content.length; i++) {
-		if(command.args.length === 1) {
-			if((message.content.startsWith(`"`) && message.content.endsWith(`"`)) ||
-				(message.content.startsWith("'") && message.content.endsWith("'")) ||
-				(message.content.startsWith("`") && message.content.endsWith("`"))) {
-				args = [message.content.substring(1, message.content.length - 1).trim()];
-			} else {
-				args = [message.content.trim()];
-			}
-			break;
-		}
+	message.flags = {};
+	for(const key in parsed) {
+		if(key === "_") continue;
 
-		let char = message.content.charAt(i);
-		if(char === `"` || char === "'" || char === "`") {
-			if(currentQuoted === false) {
-				startIndex = i + 1;
-			} else {
-				args.push(message.content.substring(startIndex, i));
+		const value = parsed[key];
+		const flag = command.flags.find(({ name }) => name === key);
+		if(!flag) continue;
 
-				if(command.args.length - 1 === args.length) {
-					args.push(message.content.substring(i + 1).trim());
-					break;
-				}
-				startIndex = 0;
-			}
-			currentQuoted = !currentQuoted;
-		} else if(char === " " && !currentQuoted) {
-			if((startIndex === 0 && args.length === 0) || startIndex !== 0) {
-				args.push(message.content.substring(startIndex, i));
-
-				if(command.args.length - 1 === args.length) {
-					args.push(message.content.substring(i + 1).trim());
-					startIndex = 0;
-					break;
-				}
-			}
-			startIndex = i + 1;
+		try {
+			message.flags[flag.name] = await resolver[flag.type](value.toString(), message, flag);
+		} catch(err) {
+			message.channel.createMessage(message.t(err.message, err.data));
+			return false;
 		}
 	}
-	if((startIndex !== 0 && args.length < command.args.length) ||
-		(startIndex === 0 && args.length === 0 && message.content.length !== 0)) {
-		args.push(message.content.substring(startIndex));
+
+	message.args = [];
+	for(let i = 0; i < command.args.length || 1; i++) {
+		let arg, quoted, quoteType;
+		if(i >= (command.args.length - 1)) arg = parsed._.splice(0).join(" ");
+		else arg = parsed._.splice(0, 1);
+
+		if(!arg) break;
+		if(/^("|'|`)/.test(arg)) {
+			quoted = true;
+			quoteType = arg.charAt(0);
+
+			do {
+				if(arg.endsWith(quoteType)) {
+					quoted = false;
+					arg = arg.slice(1, -1);
+					break;
+				}
+
+				arg += parsed._.splice(0, 1);
+			} while(quoted && parsed._.length);
+		}
+
+		message.args.push(arg);
 	}
 
-	if(args.length < command.args.filter(arg => !arg.optional).length) {
+	if(message.args.length < command.args.filter(arg => !arg.optional).length) {
 		message.channel.createMessage(message.t("wiggle.missingArgs", { command: command.name, usage: command.usage }));
 		return false;
 	}
 
-	message.args = [];
-	for(let i = 0; i < args.length; i++) {
-		let arg = args[i];
+	for(let i = 0; i < message.args.length; i++) {
+		let arg = message.args[i];
 		let argOptions = command.args[i];
 
 		try {

@@ -7,6 +7,8 @@ client.use("message", wiggle.middleware.commandParser());
 
 client.use("ready", next => {
 	client.erisClient.editStatus("online", { name: "Hello!" });
+
+	next();
 });
 
 client.use("ping", (message, next) => {
