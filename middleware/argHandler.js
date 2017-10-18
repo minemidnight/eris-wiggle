@@ -38,7 +38,7 @@ const argHandler = async (message, next, wiggle) => {
 	for(let i = 0; i < command.args.length || 1; i++) {
 		let arg, quoted, quoteType;
 		if(i >= (command.args.length - 1)) arg = parsed._.splice(0).join(" ");
-		else arg = parsed._.splice(0, 1);
+		else arg = parsed._.splice(0, 1)[0];
 
 		if(!arg) break;
 		if(/^("|'|`)/.test(arg)) {
@@ -52,7 +52,7 @@ const argHandler = async (message, next, wiggle) => {
 					break;
 				}
 
-				arg += parsed._.splice(0, 1);
+				arg += parsed._.splice(0, 1)[0];
 			} while(quoted && parsed._.length);
 		}
 
