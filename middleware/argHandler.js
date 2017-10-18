@@ -66,7 +66,7 @@ const argHandler = async (message, next, wiggle) => {
 
 	for(let i = 0; i < message.args.length; i++) {
 		let arg = message.args[i];
-		let argOptions = command.args[i];
+		let argOptions = command.args[i] || { type: "text" };
 
 		try {
 			message.args[i] = await resolver[argOptions.type](arg, message, argOptions);
