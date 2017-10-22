@@ -37,21 +37,24 @@ const commandParser = async (message, next, wiggle) => {
 	if(!command) {
 		return next();
 	} else if(command.command.guildOnly === true && !message.channel.guild) {
-		if(command.command.embedError === true) {
+		if(command.command.embedError) {
 			return message.channel.createEmbed({
 				fields: [
 					{
-						name: "Input:",
+						name: message.t("words.input"),
 						value: message.originalContent
 					},
 					{
-						name: "Error:",
+						name: message.t("words.error"),
 						value: message.t("wiggle.commands.error.guildOnly")
 					}
 				],
 				color: 0xE74C3C,
 				timestamp: new Date(),
-				footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
+				footer: {
+					text: message.t("wiggle.embed.footer",
+						{ tag: `${message.author.username}#${message.author.discriminator}` })
+				}
 			});
 		} else {
 			return message.channel.createMessage(message.t("wiggle.commands.error.guildOnly"));

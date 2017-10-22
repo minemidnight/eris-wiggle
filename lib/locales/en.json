@@ -17,5 +17,7 @@
 	"wiggle.resolver.error.noUserFound": "No user was found",
 	"wiggle.resolver.error.cantResolveMember": "The member argument can only be used when commands are executed in guilds",
 	"wiggle.resolver.error.noMemberFound": "A user was found, but they are not in the server",
-	"wiggle.resolver.error.noImage": "No image could be resolved. Please give an attachment, link, emoji, or user"
+	"wiggle.resolver.error.noImage": "No image could be resolved. Please give an attachment, link, emoji, or user",
+	"words.error": "Error",
+	"words.input": "Input"
 }

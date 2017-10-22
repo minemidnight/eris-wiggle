@@ -60,19 +60,25 @@ const argHandler = async (message, next, wiggle) => {
 			return message.channel.createEmbed({
 				fields: [
 					{
-						name: "Input:",
+						name: message.t("words.input"),
 						value: message.originalContent
 					},
 					{
-						name: "Error:",
+						name: message.t("words.error"),
 						value: message.t("wiggle.missingArgs", { command: command.name, usage: command.usage })
 					}
 				],
 				color: 0xE74C3C,
 				timestamp: new Date(),
-				footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
+				footer: {
+					text: message.t("wiggle.embed.footer",
+						{ tag: `${message.author.username}#${message.author.discriminator}` })
+				}
 			});
-		} else return message.channel.createMessage(message.t("wiggle.missingArgs", { command: command.name, usage: command.usage })); // eslint-disable-line
+		} else {
+			return message.channel.createMessage(message.t("wiggle.missingArgs",
+				{ command: command.name, usage: command.usage }));
+		}
 	}
 
 	message.args = [];
@@ -87,13 +93,16 @@ const argHandler = async (message, next, wiggle) => {
 				return message.channel.createEmbed({
 					fields: [
 						{
-							name: "Error:",
+							name: message.t("words.error"),
 							value: message.t(err.message, err.data)
 						}
 					],
 					color: 0xE74C3C,
 					timestamp: new Date(),
-					footer: { text: message.t("wiggle.embed.footer", { tag: `${message.author.username}#${message.author.discriminator}` }) } // eslint-disable-line
+					footer: {
+						text: message.t("wiggle.embed.footer",
+							{ tag: `${message.author.username}#${message.author.discriminator}` })
+					}
 				});
 			} else {
 				return message.channel.createMessage(message.t(err.message, err.data));
