@@ -9,7 +9,7 @@ const commandParser = async (message, next, wiggle) => {
 	prefixes.forEach((val, index) => {
 		escapedPrefixes[index] = val.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	});
-	const prefixRegex = new RegExp(`^(?:${prefixes.join("|")}),?(?:\\s+)?([\\s\\S]+)`, "i");
+	const prefixRegex = new RegExp(`^(?:${escapedPrefixes.join("|")}),?(?:\\s+)?([\\s\\S]+)`, "i");
 
 	message.originalContent = message.content;
 	let match = message.content.match(prefixRegex);
