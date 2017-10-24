@@ -1,11 +1,11 @@
-const parseArgs = require("minimist");
+const parseArgs = require("yargs-parser");
 const resolver = require("../lib/resolver.js");
 
 const argHandler = async (message, next, wiggle) => {
 	const { command } = message;
 	if(!command) return next();
 
-	const parsed = parseArgs(message.content.split(" "), {
+	const parsed = parseArgs(message.content, {
 		string: command.flags.filter(flag => flag.type !== "boolean").map(({ name }) => name),
 		boolean: command.flags.filter(flag => flag.type === "boolean").map(({ name }) => name),
 		alias: command.flags.reduce((a, b) => {
@@ -15,8 +15,18 @@ const argHandler = async (message, next, wiggle) => {
 		default: command.flags.reduce((a, b) => {
 			if(b.default) a[b.name] = b.default;
 			return a;
-		}, {})
+		}, {}),
+		configuration: {
+			"short-option-groups": false,
+			"camel-case-expansion": false,
+			"dot-notation": false
+		}
 	});
+
+	message.args = parsed._;
+	if(message.args > command.args.length) {
+		message.args[command.args.length - 1] = message.args.splice(command.args.length).join(" ");
+	}
 
 	message.flags = {};
 	for(const key in parsed) {
@@ -27,36 +37,17 @@ const argHandler = async (message, next, wiggle) => {
 		if(!flag) continue;
 
 		try {
-			message.flags[flag.name] = await resolver[flag.type](value.toString(), message, flag);
+			if(Array.isArray(value)) {
+				message.flags[flag.name] = await Promise.all(
+					value.map(toResolve => resolver[flag.type](toResolve.toString(), message, flag))
+				);
+			} else {
+				message.flags[flag.name] = await resolver[flag.type](value.toString(), message, flag);
+			}
 		} catch(err) {
 			message.channel.createMessage(message.t(err.message, err.data));
 			return false;
 		}
-	}
-
-	message.args = [];
-	for(let i = 0; i < command.args.length || 1; i++) {
-		let arg, quoted, quoteType;
-		if(i >= (command.args.length - 1)) arg = parsed._.splice(0).join(" ");
-		else arg = parsed._.splice(0, 1)[0];
-
-		if(!arg) break;
-		if(/^("|'|`)/.test(arg)) {
-			quoted = true;
-			quoteType = arg.charAt(0);
-
-			do {
-				if(arg.endsWith(quoteType)) {
-					quoted = false;
-					arg = arg.slice(1, -1);
-					break;
-				}
-
-				arg += parsed._.splice(0, 1)[0];
-			} while(quoted && parsed._.length);
-		}
-
-		message.args.push(arg);
 	}
 
 	if(message.args.length < command.args.filter(arg => !arg.optional).length) {

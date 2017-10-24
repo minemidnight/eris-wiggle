@@ -4,6 +4,10 @@ const commandParser = async (message, next, wiggle) => {
 	else prefixes = wiggle.get("prefixes") || ["mention"];
 
 	prefixes = prefixes.filter((ele, i, arr) => arr.indexOf(ele) === i);
+	if(wiggle.get("escapePrefixes") !== false) {
+		prefixes = prefixes.map(regex => regex.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"));
+	}
+
 	if(~prefixes.indexOf("mention")) prefixes[prefixes.indexOf("mention")] = `<@!?${wiggle.erisClient.user.id}>`;
 	const prefixRegex = new RegExp(`^(?:${prefixes.join("|")}),?(?:\\s+)?([\\s\\S]+)`, "i");
 

@@ -33,6 +33,7 @@ Wiggle Methods:
 	* Recommended to use categories over this
 	* Returns: instance of Wiggle that the method was called on
 * get(name\<String>)
+	* Equivalent to `<Wiggle>.locals.options.<key>`
 	* Returns: value of the option `name` which was set by `<Wiggle>.set(name, value)`
 * set(name\<String>, value\<*>)
 	* Sets the option `name` to `value`
@@ -46,6 +47,7 @@ Wiggle Methods:
 		* localeFunction\<Function(message\<Message>)> - Function expecting `message.locale` and `message.channel.guild.locale` if applicable to be set, for usage with `message.t` (read about locales below)
 		* prefixes\<Array\<String>> - Prefixes used by the command parser middleware. Each string is turned into a regular expression. Not case  sensitive
 		* getPrefixes\<Function(message\<Message>)> - Expects a return of an array of strings (parsed as regular expresions, not case sensitive) of prefixes that should be used, based off the context of the message. If not defined, the `prefixes` option will be used
+		* escapePrefixes\<Boolean> - Whether or not to escape prefixes (default true)
 		* All other options are **not** used internally, but may be used inside of code. `<Wiggle>.locals` may be a better option rather than using `.set` if you are not using one of the options.
 	* Returns: instance of Wiggle that the method was called on
 * use(...middleware\<*>)
@@ -80,7 +82,7 @@ Wiggle Methods:
 			* Always calls the `next` callback
 			* Use with `guildCreate` and/or `guildDelete` events
 			* Require the superagent package to work
-		* commandParser
+		* commandParser\<Function()>
 			* Highly recommended to use, unless you know what you are doing
 			* Should be the first middleware that is used
 			* Sets the `message.command` property of the command used with the message, if these is one
