@@ -3,12 +3,13 @@ Command Router made for Eris
 
 ## Wiggle
 Creating a Wiggle Instance
-* Creation: call the function returned `require("eris-wiggle")`
+* Creation: call the function returned by `require("eris-wiggle")`
 * ex:
 ```js
 const wiggle = require("eris-wiggle");
 const client = wiggle();
 ```
+* If the function is called with an object, `<Wiggle>.set` is called with each key-value pair.
 
 Wiggle Properties:
 * commands\<Map>
@@ -35,6 +36,8 @@ Wiggle Methods:
 * get(name\<String>)
 	* Equivalent to `<Wiggle>.locals.options.<key>`
 	* Returns: value of the option `name` which was set by `<Wiggle>.set(name, value)`
+* set(options\<Object>)
+	* `<Wiggle>.set(name, value)` is called for every key-value pair 
 * set(name\<String>, value\<*>)
 	* Sets the option `name` to `value`
 	* Options:
