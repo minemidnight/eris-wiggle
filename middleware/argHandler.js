@@ -5,7 +5,16 @@ const argHandler = async (message, next, wiggle) => {
 	const { command } = message;
 	if(!command) return next();
 
-	const parsed = parseArgs(message.content, {
+	let toParse = message.content;
+	const split = toParse.split(/\s/);
+	if(split.length > command.args.length) {
+		const firstPart = split.slice(0, (command.args.length || 1) - 1).join(" ");
+		const quotedPart = split.slice((command.args.length || 1) - 1).join(" ").replace(/'/g, `"`);
+		if(firstPart) toParse = `${firstPart} '${quotedPart}'`;
+		else toParse = `'${quotedPart}'`;
+	}
+
+	const parsed = parseArgs(toParse, {
 		string: command.flags.filter(flag => flag.type !== "boolean").map(({ name }) => name),
 		boolean: command.flags.filter(flag => flag.type === "boolean").map(({ name }) => name),
 		alias: command.flags.reduce((a, b) => {
@@ -24,10 +33,6 @@ const argHandler = async (message, next, wiggle) => {
 	});
 
 	message.args = parsed._;
-	if(message.args > command.args.length) {
-		message.args[command.args.length - 1] = message.args.splice(command.args.length).join(" ");
-	}
-
 	message.flags = {};
 	for(const key in parsed) {
 		if(key === "_") continue;

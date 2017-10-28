@@ -1,12 +1,14 @@
 const wiggle = require("../index");
-const client = wiggle();
-client.set("owner", "155112606661607425")
-	.set("prefixes", ["mention", "!"])
-	.set("token", "token here")
-	.set("commandOptions", { sendTyping: true, replyResult: true })
-	.use("message", wiggle.middleware.commandParser(), wiggle.middleware.argHandler())
-	.set("commands", "example/commands")
-	.set("locales", "example/locales")
+const client = wiggle({
+	owner: "155112606661607425",
+	prefixes: ["mention", "!"],
+	token: "token here",
+	commandOptions: { sendTyping: true, replyResult: true },
+	commands: "example/commands",
+	locales: "example/locales"
+});
+
+client.use("message", wiggle.middleware.commandParser(), wiggle.middleware.argHandler())
 	.use("ready", next => {
 		client.erisClient.editStatus("online", { name: "Testing!" });
 		next();
