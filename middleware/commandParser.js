@@ -50,4 +50,4 @@ const commandParser = async (message, next, wiggle) => {
 	return next();
 };
 
-module.exports = () => commandParser;
+module.exports = () => ({ middleware: commandParser, priority: 99 });

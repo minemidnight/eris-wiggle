@@ -57,6 +57,7 @@ Wiggle Methods:
 		* (\<Category>) - Registers all the commands inside of a category
 		* (\<Category|String>, \<Function(message\<Object>, next\<Function()>, wiggle\<Wiggle>)>) - Function gets called each time a command from the category is used. Category can also be a string of the name of the category as long as `<WiggleInstace>.use(<Category>)` was called first
 		* (\<Command|String>, \<Function(message\<Object>, next\<Function()>, wiggle\<Wiggle>)>) - Function gets called each the command is used. Command can also be a string of the name of the command
+		* All functions can be replaced with a object, with the keys `middleware` for the function and `priority` to set the function priority (default 1)
 		* If multiple functions are used with the middleware, they will all be used as middlewares for the same thing (ex: `client.use("message", fn1, fn2)` will both go to message)
 	* `...params` represents all the parameters of the Eris event in use
 	* The **next** parameter
@@ -64,10 +65,11 @@ Wiggle Methods:
 		* If next isn't called, the middleware cycle ends
 		* Accepts no parameters
 	* The order of middlware functions executed is as follows
-		* The first middleware function added (expected to be command parser)
+		* Middlewares with a priority >= 50
 		* All category or command middlewares (not the executing of them)
 		* The rest, besides commands, in order of which they were added
 		* All commands are last (the execution of them)
+		* Each middleware is sorted by priority, then the order in which they were added
 	* Built in middleware
 		* Accessing: `wiggle.middleware` is an object of middlewares built in (not a instance of wiggle, but what is returned from `require("eris-wiggle")`)
 		* Usage: each middleware in the built in middleware is a function which returns a middleware function to be used (ex: `client.use("message", wiggle.middleware.commandParser())`)
@@ -82,12 +84,12 @@ Wiggle Methods:
 			* Always calls the `next` callback
 			* Use with `guildCreate` and/or `guildDelete` events
 			* Require the superagent package to work
-		* commandParser\<Function()>
+		* commandParser\<Object {middle:\<Function()>, priority: 99}>
 			* Highly recommended to use, unless you know what you are doing
-			* Should be the first middleware that is used
 			* Sets the `message.command` property of the command used with the message, if these is one
 			* Always calls the `next` callback, regardless if the message had a command or not
 			* Use with `message` event
+			* Priority of 99
 	* Returns: instance of Wiggle that the method was called on
 
 ## Categories
