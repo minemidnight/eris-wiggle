@@ -1,4 +1,6 @@
 {
+	"imports": ["words_en"],
+
 	"ping.success": "Pong! {{ms}}ms",
 	"say.success": "You said: {{word}}",
 	"words.nothing": "Nothing"
