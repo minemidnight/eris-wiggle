@@ -1,6 +1,6 @@
 {
   "name": "eris-wiggle",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Command router for Eris",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/minemidnight/eris-wiggle#readme",
   "dependencies": {
-    "eris": "^0.8.0",
+    "eris": "^0.8.1",
     "yargs-parser": "^8.0.0"
   },
   "optionalDependencies": {

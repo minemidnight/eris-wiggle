@@ -240,8 +240,9 @@ Locales are a way to define the language of a user. eris-wiggle has built-in sup
 To use locales, create a folder containg files of each locale. Each file should be named the name of the locale it corresponds to. For example, for an English locale, the file would be `en.json`.
 
 The locale file:
-* The locale file should be composed of fields, or context, and then the message
+* The locale file's key-value pairs should be of "context" and the message
 * Message that have data should have a placeholder with `{{placeholderName}}` which will be replaced later
+* Files can be JSON or Javascript
 * ex:
 ```json
 {
@@ -249,12 +250,15 @@ The locale file:
 	"commands.kick.noPerms": "You have no permission to kick that user"
 }
 ```
+* Extra options:
+	* `imports`\<Array> field - array of files to import into the current locale file, all relative
+	* `prefix`\<String> field - appends the prefix to each key
 
 Now, actually using locales is very simple. When a message is sent, `message.t` and `message.channel.guild.t` are both added to it, allowing you to use locales with ease.
 
 These functions accept 2 parameters:
 * context\<Path>
-	* The context (field) of the JSON file message
+	* The context (field) of the file message
 * data\<Object>
 	* Each key should be the placeholder name
 	* Each value should be the value of the corresponding placeholder
