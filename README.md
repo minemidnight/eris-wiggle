@@ -176,6 +176,7 @@ Constructor options (all optional):
 		* short\<String> - shortname option for the flag (can be used as an alias instead)
 		* aliases\<Array\<String>> - array of aliases to also use
 		* default\<*> - the default value to be passed to the resolver if no value is given
+		* array\<Boolean> - if the value should be an array, regardless if only 1 input was provided
 	* Default value: `[]`
 * guildOnly\<Boolean>
 	* Whether or not this command may only be executed in guilds

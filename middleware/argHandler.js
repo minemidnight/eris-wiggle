@@ -1,20 +1,28 @@
-const parseArgs = require("yargs-parser");
+const parseArgs = require("minimist");
 const resolver = require("../lib/resolver.js");
 
 const argHandler = async (message, next, wiggle) => {
+	message.flags = {};
+	message.args = [];
+
 	const { command } = message;
 	if(!command) return next();
 
-	let toParse = message.content;
-	const split = toParse.split(/\s/);
-	if(split.length > command.args.length) {
-		const firstPart = split.slice(0, (command.args.length || 1) - 1).join(" ");
-		const quotedPart = split.slice((command.args.length || 1) - 1).join(" ").replace(/'/g, `"`);
-		if(firstPart) toParse = `${firstPart} '${quotedPart}'`;
-		else toParse = `'${quotedPart}'`;
+	const placeholder = `%__${(Date.now() + process.hrtime().reduce((a, b) => a + b, 0)).toString(36)}__%`;
+	const quoteRegex = /(["'])(?:(?=(\\?))\2.)*?\1/g;
+
+	let replaced = "", prev = 0, match = quoteRegex.exec(message.content);
+	while(match) {
+		if(match.index === quoteRegex.lastIndex) quoteRegex.lastIndex++;
+
+		replaced += message.content.substring(prev, match.index) + match[0].replace(/ /g, placeholder);
+
+		prev = match.index + match[0].length;
+		match = quoteRegex.exec(message.content);
 	}
 
-	const parsed = parseArgs(toParse, {
+	replaced += message.content.substring(prev);
+	const parsed = parseArgs(replaced.split(" "), {
 		string: command.flags.filter(flag => flag.type !== "boolean").map(({ name }) => name),
 		boolean: command.flags.filter(flag => flag.type === "boolean").map(({ name }) => name),
 		alias: command.flags.reduce((a, b) => {
@@ -24,22 +32,31 @@ const argHandler = async (message, next, wiggle) => {
 		default: command.flags.reduce((a, b) => {
 			if(b.default) a[b.name] = b.default;
 			return a;
-		}, {}),
-		configuration: {
-			"short-option-groups": false,
-			"camel-case-expansion": false,
-			"dot-notation": false
-		}
+		}, {})
 	});
 
-	message.args = parsed._;
-	message.flags = {};
+	const placeholderRegex = new RegExp(placeholder, "g");
 	for(const key in parsed) {
-		if(key === "_") continue;
+		let value = parsed[key];
+		if(key === "_") {
+			parsed[key] = value.map(arg => typeof arg === "string" && ~arg.indexOf(placeholder) ?
+				arg :
+				arg.replace(placeholderRegex, " "));
+			continue;
+		}
 
-		const value = parsed[key];
+		if(/^(['"]).+?\1$/.test(value)) value = value.slice(1, -1);
+		if(typeof value === "string" && ~value.indexOf(placeholder)) {
+			value = value.replace(placeholderRegex, " ");
+		} else if(Array.isArray(value)) {
+			value = value.map(flag => typeof flag === "string" && ~flag.indexOf(placeholder) ?
+				flag :
+				flag.replace(placeholderRegex, " "));
+		}
+
 		const flag = command.flags.find(({ name }) => name === key);
 		if(!flag) continue;
+		else if(flag.array && !Array.isArray(value)) value = [value];
 
 		try {
 			if(Array.isArray(value)) {
@@ -53,6 +70,30 @@ const argHandler = async (message, next, wiggle) => {
 			message.channel.createMessage(message.t(err.message, err.data));
 			return false;
 		}
+	}
+
+	for(let i = 0; i < command.args.length || 1; i++) {
+		let arg, quoted, quoteType;
+		if(i >= (command.args.length - 1)) arg = parsed._.splice(0).join(" ");
+		else arg = parsed._.splice(0, 1)[0];
+
+		if(!arg) break;
+		if(arg.startsWith(`"`) || arg.startsWith("'")) {
+			quoted = true;
+			quoteType = arg.charAt(0);
+
+			do {
+				if(arg.endsWith(quoteType)) {
+					quoted = false;
+					arg = arg.slice(1, -1);
+					break;
+				}
+
+				arg += parsed._.splice(0, 1)[0];
+			} while(quoted && parsed._.length);
+		}
+
+		message.args.push(arg);
 	}
 
 	if(message.args.length < command.args.filter(arg => !arg.optional).length) {
