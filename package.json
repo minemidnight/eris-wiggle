@@ -1,6 +1,6 @@
 {
   "name": "eris-wiggle",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Command router for Eris",
   "main": "index.js",
   "scripts": {
