@@ -40,8 +40,7 @@ const argHandler = async (message, next, wiggle) => {
 		let value = parsed[key];
 		if(key === "_") {
 			parsed[key] = value.map(arg => typeof arg === "string" && ~arg.indexOf(placeholder) ?
-				arg :
-				arg.replace(placeholderRegex, " "));
+				arg.replace(placeholderRegex, " ") : arg);
 			continue;
 		}
 
