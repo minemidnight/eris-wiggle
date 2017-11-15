@@ -72,17 +72,16 @@ const argHandler = async (message, next, wiggle) => {
 	}
 
 	for(let i = 0; i < command.args.length || 1; i++) {
-		let arg, quoted, quoteType;
+		let arg, quoted;
 		if(i >= (command.args.length - 1)) arg = parsed._.splice(0).join(" ");
 		else arg = parsed._.splice(0, 1)[0];
 
 		if(!arg) break;
-		if(arg.startsWith(`"`) || arg.startsWith("'")) {
+		if(typeof arg === "string" && (arg.startsWith(`"`) || arg.startsWith("'"))) {
 			quoted = true;
-			quoteType = arg.charAt(0);
 
 			do {
-				if(arg.endsWith(quoteType)) {
+				if(arg.endsWith(arg.charAt(0))) {
 					quoted = false;
 					arg = arg.slice(1, -1);
 					break;
