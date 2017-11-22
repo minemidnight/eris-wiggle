@@ -123,6 +123,15 @@ Methods:
 
 Categories created are only initiated once `<Wiggle>.use(<Category>)` is called
 
+## Subcommands
+Subcommands are a series of commands within commands.
+* Usage: `<Category>.use(<Category>)`
+
+Commands should be registered to the category being passed to `.use()` before calling it. When using the `commands` option to register commands, create a folder instead of a file, and fill that folder with the subcommands. This file should be the normal format of a command (see example).
+
+Subcommands are accessible through the following:
+`<Category>.subcommands`
+
 ## Commands
 Commands are made using `<Wiggle>.command(...)` or `<Category>.command(...)`
 
@@ -184,6 +193,12 @@ Constructor options (all optional):
 * replyResult\<Boolean>
 	* If true, `<context>.reply` is called with the return value from the run function of the command
 	* Default value: `false`
+* cooldown\<Array|Object|Number>
+	* Sets a command's cooldown
+	* Can be set to be a certain amount of uses per certain time
+	* If an array, the format should be as such: `[time (ms), uses]`
+	* If an object, it should be as such; `{ time: <time in ms>, uses: <uses> }`
+	* If a number, it should represent the amount of ms between every 1 use
 * Any other option can be specified, but they are not used for anything. Can be used to pass extra data trhough a command
 
 Properties:
@@ -238,7 +253,7 @@ The command run function is called with a parameter:
 ## Locales
 Locales are a way to define the language of a user. eris-wiggle has built-in support for easy implementation of locales.
 
-To use locales, create a folder containg files of each locale. Each file should be named the name of the locale it corresponds to. For example, for an English locale, the file would be `en.json`.
+To use locales, create a folder containg files of each locale, or a folder of folders of files which are all bundled together. Each file should be named the name of the locale it corresponds to. For example, for an English locale, the file would be `en.json`.
 
 The locale file:
 * The locale file's key-value pairs should be of "context" and the message

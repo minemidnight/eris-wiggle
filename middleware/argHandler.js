@@ -104,7 +104,7 @@ const argHandler = async (message, next, wiggle) => {
 		let argOptions = command.args[i] || { type: "text" };
 
 		try {
-			message.args[i] = await resolver[argOptions.type](arg, message, argOptions);
+			message.args[i] = await resolver[argOptions.type](arg.toString(), message, argOptions);
 		} catch(err) {
 			message.channel.createMessage(message.t(err.message, err.data));
 			return false;
