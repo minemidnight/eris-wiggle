@@ -2,9 +2,12 @@
 	"prefix": "wiggle.",
 
 	"commands.error.guildOnly": "This command can only be used in guilds",
+	"commands.error.cooldown": "You are currently only cooldown for this command (cooldown: {{times}} use(s) per {{seconds}} seconds)",
 	"locale.invalidPlaceholder": "< **Invalid placeholder (`{{placeholder}}` is not defined). Please report this to a developer** >",
 	"locale.invalidContext": "Invalid context (`{{context}}` does not exist). Please report this to a developer",
 	"missingArgs": "You are missing some arguments! Correct usage: `{{command}} {{usage}}`",
+	"subcommands.noSubcommand": "No subcommand given. Please enter one of the following subcommands: {{subcommands}}",
+	"subcommands.invalidSubCommand": "Invalid subcommand. Please enter one of the following subcommands: {{subcommands}}",
 	"resolver.error.booleanError": "Invalid input, please only use `enable, yes, true, 1` or `disable, no, false, 0`",
 	"resolver.error.channelNotFound": "No channel found",
 	"resolver.error.emojiNotFound": "No emoji found",
