@@ -127,7 +127,7 @@ Categories created are only initiated once `<Wiggle>.use(<Category>)` is called
 Subcommands are a series of commands within commands.
 * Usage: `<Category>.use(<Category>)`
 
-Commands should be registered to the category being passed to `.use()` before calling it. When using the `commands` option to register commands, create a folder instead of a file, and fill that folder with the subcommands. This file should be the normal format of a command (see example).
+Commands should be registered to the category being passed to `.use()` before calling it. When using the `commands` option to register commands, create a folder instead of a file, and fill that folder with the subcommands. This file should be the normal format of a command (see example). Any subcommands with the same name as the category containing the subcommand will be used if there was no subcommand or an invalid sub command (used as the default command). If \<Category>.aliases is set, it will be used as aliases for the subcategory. To set aliases using `<Wiggle>.set("commands", ...)`, make a file named `aliases.js` exporting an array of aliases or `aliases.json` containing an array of aliases.
 
 Subcommands are accessible through the following:
 `<Category>.subcommands`
