@@ -244,7 +244,7 @@ The command run function is called with a parameter:
 	* reply\<Function(content\<Object|String>, file\<Object>)>
 		* Function that does the same as message.channel.createMessage with few differences
 		* Accepts a file as the first parameter if there is no content
-		* Accepts an embed as the first argument without { embed: { ... } }
+		* Accepts an embed as the first argument without `{ embed: { ... } }`
 		* Accepts an array as the first argument, which will then make the first argument the first element, and the second the second element (useful when using replyResult option)
 	* resolver\<Object>
 		* Object filled with functions
