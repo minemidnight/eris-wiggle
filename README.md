@@ -51,6 +51,7 @@ Wiggle Methods:
 		* prefixes\<Array\<String>> - Prefixes used by the command parser middleware. Each string is turned into a regular expression. Not case  sensitive
 		* getPrefixes\<Function(message\<Message>)> - Expects a return of an array of strings (parsed as regular expresions, not case sensitive) of prefixes that should be used, based off the context of the message. If not defined, the `prefixes` option will be used
 		* escapePrefixes\<Boolean> - Whether or not to escape prefixes (default true)
+		* contextLocals\<Array> - An array of object keys from `<Wiggle>.locals`. For each key, the value of `<Wiggle>.locals[key]` will be set to `<context>[key]` for use with command run functions.
 		* All other options are **not** used internally, but may be used inside of code. `<Wiggle>.locals` may be a better option rather than using `.set` if you are not using one of the options.
 	* Returns: instance of Wiggle that the method was called on
 * use(...middleware\<*>)
@@ -235,11 +236,15 @@ The command run function is called with a parameter:
 	* guild\<Object>
 		* Guild the message was sent in
 		* Reference to message.channel.guild
+	* member\<Object>
+		* Member who sent the message
+		* Reference to message.member
 	* message\<Object>
 		* The message that was sent
 	* reply\<Function(content\<Object|String>, file\<Object>)>
 		* Function that does the same as message.channel.createMessage with few differences
 		* Accepts a file as the first parameter if there is no content
+		* Accepts an embed as the first argument without { embed: { ... } }
 		* Accepts an array as the first argument, which will then make the first argument the first element, and the second the second element (useful when using replyResult option)
 	* resolver\<Object>
 		* Object filled with functions
